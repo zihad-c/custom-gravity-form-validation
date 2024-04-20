@@ -1,0 +1,91 @@
+<?php
+/*
+Plugin Name: Custom Gravity Forms Validation
+Description: Modify validation or Customize error messages for Gravity Forms.
+Version: 1.1
+Author: <a href="https://zihadchowdhury.com" target="_blank">Zihad Chowdhury</a>';
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+// Add options page to settings menu
+function custom_add_options_page() {
+    add_menu_page(
+        'Custom Gravity Forms Validation Settings', // Page title
+        'Gravity Forms Validation', // Menu title
+        'manage_options', // Capability required to access
+        'custom-gravity-forms-validation-settings', // Menu slug
+        'custom_options_page', // Callback function to display page content
+        'dashicons-admin-generic' // Icon (optional)
+    );
+}
+add_action( 'admin_menu', 'custom_add_options_page' );
+
+
+// Display options page content
+function custom_options_page() {
+    ?>
+    <div class="wrap">
+        <h2>Custom Gravity Forms Validation Settings</h2>
+        <form method="post" action="options.php">
+            <?php settings_fields( 'custom-gravity-forms-validation-settings-group' ); ?>
+            <?php do_settings_sections( 'custom-gravity-forms-validation-settings-group' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Custom Error Message</th>
+                    <td><input type="text" name="custom_error_message" value="<?php echo esc_attr( get_option( 'custom_error_message' ) ); ?>" /></td>
+                </tr>
+            </table>
+            <?php submit_button(); ?>
+        </form>
+    </div>
+    <?php
+}
+
+// Register and initialize plugin settings
+function custom_initialize_settings() {
+    register_setting( 'custom-gravity-forms-validation-settings-group', 'custom_error_message' );
+}
+add_action( 'admin_init', 'custom_initialize_settings' );
+
+// Custom function to modify validation message
+function custom_validation_message( $message, $form ) {
+    // Get custom error message from plugin settings
+    $custom_error_message = get_option( 'custom_error_message' );
+    if ( ! empty( $custom_error_message ) ) {
+        $new_message = $custom_error_message;
+    } else {
+        // Default custom error message
+        $new_message = 'Er is een probleem opgetreden met uw inzending. Fouten zijn hieronder gemarkeerd.';
+    }
+
+    return $new_message;
+}
+add_filter( 'gform_validation_message', 'custom_validation_message', 10, 2 );
+
+// Ensure plugin is properly deactivated if Gravity Forms is not active
+function custom_plugin_deactivation_notice() {
+    if ( ! class_exists( 'GFCommon' ) ) {
+        deactivate_plugins( plugin_basename( __FILE__ ) );
+        wp_die( 'This plugin requires Gravity Forms to be activated.' );
+    }
+}
+register_activation_hook( __FILE__, 'custom_plugin_deactivation_notice' );
+
+// Add plugin documentation link to plugin row meta
+function custom_plugin_row_meta( $links, $file ) {
+    if ( plugin_basename( __FILE__ ) === $file ) {
+        $links[] = '<a href="' . esc_url( 'https://example.com/plugin-docs' ) . '" target="_blank">' . esc_html__( 'Documentation', 'custom-plugin' ) . '</a>';
+    }
+    return $links;
+}
+add_filter( 'plugin_row_meta', 'custom_plugin_row_meta', 10, 2 );
+
+
+
+// Thank you for using this plugin. I hope you like it. Please feel free to contact me at this address https://zihadchowdhury.com for any update or suggestion or feedback.
