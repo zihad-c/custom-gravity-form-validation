@@ -38,7 +38,7 @@ If you encounter any issues or have questions about the Custom Gravity Forms Val
 
 ## Changelog
 
-- Version 1.0 (April 2024): Initial release.
+- Version 1.1 (April 2024): Initial release.
 
 ## License
 
