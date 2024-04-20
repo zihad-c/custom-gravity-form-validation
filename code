@@ -3,7 +3,7 @@
 Plugin Name: Custom Gravity Forms Validation
 Description: Modify validation or Customize error messages for Gravity Forms.
 Version: 1.1
-Author: <a href="https://zihadchowdhury.com" target="_blank">Zihad Chowdhury</a>';
+Author: <a href="https://zihadchowdhury.com" target="_blank">Zihad Chowdhury</a>
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
